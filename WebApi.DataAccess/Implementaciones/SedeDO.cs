@@ -10,7 +10,8 @@ using WebApi.Entities.Sede;
 namespace WebApi.DataAccess.Implementaciones
 {
     public class SedeDO : ISedeDO
-    {
+    {        
+
         public DataItemSede getAllSedes(string nombre_sede, string id_usuario)
         {
             try
@@ -124,6 +125,41 @@ namespace WebApi.DataAccess.Implementaciones
                 {
                     codigoRes = HttpStatusCode.InternalServerError,
                     mensajeRes = "Error al editar los datos."
+                };
+            }
+        }
+        public DataPostSede deleteSede(int id_sede, string id_usuario)
+        {
+            try
+            {
+                var ctx = new BD_COMPLEJOSEntities();
+                var datosBusqueda = ctx.SP_MOD_SEDE_ELIMINACION(id_usuario, id_sede)
+                    .FirstOrDefault();
+
+                if (datosBusqueda != null)
+                {
+
+                    return new DataPostSede()
+                    {
+                        codigoRes = (HttpStatusCode)datosBusqueda.codigo_respuesta,
+                        mensajeRes = datosBusqueda.mensaje_usuario_respuesta
+                    };
+                }
+                else
+                {
+                    return new DataPostSede()
+                    {
+                        codigoRes = HttpStatusCode.InternalServerError,
+                        mensajeRes = "No se obtuvo respuesta de la transacción."
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new DataPostSede()
+                {
+                    codigoRes = HttpStatusCode.InternalServerError,
+                    mensajeRes = "Error al eliminar los datos."
                 };
             }
         }

@@ -90,6 +90,7 @@ namespace WebApi.Controllers
                         new { Message = "Error interno en el servicio de registro." });
             }
         }
+        
         [HttpPut]
         [Authorize]
         public HttpResponseMessage Put(int id, PostSede datos)
@@ -126,5 +127,43 @@ namespace WebApi.Controllers
                         new { Message = "Error interno en el servicio de modificación." });
             }
         }
+
+        [HttpDelete]
+        [Authorize]
+        public HttpResponseMessage Delete(int id)
+        {
+
+            try
+            {
+                var id_usuario = User.Identity.GetUserId();
+                var respuesta = _sedeBO.deleteSede(id, id_usuario);
+                if (respuesta != null)
+                {
+
+                    if (respuesta.codigoRes == HttpStatusCode.OK)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK,
+                            new { Message = respuesta.mensajeRes });
+                    }
+                    else if (respuesta.codigoRes == HttpStatusCode.NoContent)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NoContent);
+                    }
+                    return Request.CreateResponse(respuesta.codigoRes,
+                        new { Message = respuesta.mensajeRes });
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                        new { Message = "Error interno al obtener respuesta." });
+                }
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                        new { Message = "Error interno en el servicio de eliminación." });
+            }
+        }
     }
 }
+

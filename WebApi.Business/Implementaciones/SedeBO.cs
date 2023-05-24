@@ -15,7 +15,7 @@ namespace WebApi.Business.Implementaciones
         public SedeBO(ISedeDO sedeDO)
         {
             _sedeDO = sedeDO;
-        }
+        }        
 
         public DataItemSede getAllSedes(string nombre_sede, string id_usuario)
         {
@@ -30,6 +30,11 @@ namespace WebApi.Business.Implementaciones
         public DataPostSede putSede(int id_sede, PostSede datos, string id_usuario)
         {
             return _sedeDO.putSede(id_sede, datos, id_usuario);
+        }
+
+        public DataPostSede deleteSede(int id_sede, string id_usuario)
+        {
+            return _sedeDO.deleteSede(id_sede, id_usuario);
         }
     }
 }
