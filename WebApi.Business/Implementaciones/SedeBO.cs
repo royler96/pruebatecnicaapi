@@ -36,5 +36,10 @@ namespace WebApi.Business.Implementaciones
         {
             return _sedeDO.deleteSede(id_sede, id_usuario);
         }
+
+        public DataItemSedeUnico getSede(int id_sede, string id_usuario)
+        {
+            return _sedeDO.getSede(id_sede, id_usuario);
+        }
     }
 }

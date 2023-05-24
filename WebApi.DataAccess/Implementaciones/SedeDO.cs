@@ -56,6 +56,49 @@ namespace WebApi.DataAccess.Implementaciones
                 };
             }
         }
+
+        public DataItemSedeUnico getSede(int id_sede, string id_usuario)
+        {
+            try
+            {
+                var ctx = new BD_COMPLEJOSEntities();
+                var datosBusqueda = ctx.SP_MOD_SEDE_DETALLE(id_usuario, id_sede).FirstOrDefault();
+
+                if (datosBusqueda != null)
+                {
+                    var config = new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<SP_MOD_SEDE_DETALLE_Result, ItemSede>();
+                    });
+
+                    IMapper mapper = config.CreateMapper();
+                    var datosMapeados = mapper.Map<SP_MOD_SEDE_DETALLE_Result, ItemSede>(datosBusqueda);
+
+                    return new DataItemSedeUnico()
+                    {
+                        codigoRes = HttpStatusCode.OK,
+                        mensajeRes = "Se obtuvieron los datos correctamente.",
+                        datos = datosMapeados
+                    };
+                }
+                else
+                {
+                    return new DataItemSedeUnico()
+                    {
+                        codigoRes = HttpStatusCode.NoContent,
+                        mensajeRes = "No se obtuvieron datos."                        
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new DataItemSedeUnico()
+                {
+                    codigoRes = HttpStatusCode.InternalServerError,
+                    mensajeRes = "Error al obtenerlos datos"                    
+                };
+            }
+        }
         public DataPostSede postSede(PostSede datos, string id_usuario)
         {
             try

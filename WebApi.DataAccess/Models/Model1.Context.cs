@@ -172,5 +172,31 @@ namespace WebApi.DataAccess.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_MOD_SEDE_MODIFICACION_Result>("SP_MOD_SEDE_MODIFICACION", id_usuarioParameter, id_sedeParameter, nombre_sedeParameter, num_complejoParameter, presupuestoParameter, estadoParameter);
         }
+    
+        public virtual ObjectResult<SP_MOD_EQUIPO_DETALLE_Result> SP_MOD_EQUIPO_DETALLE(string id_usuario, Nullable<int> id_equipo)
+        {
+            var id_usuarioParameter = id_usuario != null ?
+                new ObjectParameter("id_usuario", id_usuario) :
+                new ObjectParameter("id_usuario", typeof(string));
+    
+            var id_equipoParameter = id_equipo.HasValue ?
+                new ObjectParameter("id_equipo", id_equipo) :
+                new ObjectParameter("id_equipo", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_MOD_EQUIPO_DETALLE_Result>("SP_MOD_EQUIPO_DETALLE", id_usuarioParameter, id_equipoParameter);
+        }
+    
+        public virtual ObjectResult<SP_MOD_SEDE_DETALLE_Result> SP_MOD_SEDE_DETALLE(string id_usuario, Nullable<int> id_sede)
+        {
+            var id_usuarioParameter = id_usuario != null ?
+                new ObjectParameter("id_usuario", id_usuario) :
+                new ObjectParameter("id_usuario", typeof(string));
+    
+            var id_sedeParameter = id_sede.HasValue ?
+                new ObjectParameter("id_sede", id_sede) :
+                new ObjectParameter("id_sede", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_MOD_SEDE_DETALLE_Result>("SP_MOD_SEDE_DETALLE", id_usuarioParameter, id_sedeParameter);
+        }
     }
 }

@@ -20,4 +20,11 @@ namespace WebApi.Entities.Sede
         public Nullable<bool> estado { get; set; }
         public string fecha_actualizacion { get; set; }
     }
+
+    public class DataItemSedeUnico
+    {
+        public HttpStatusCode codigoRes { get; set; }
+        public string mensajeRes { get; set; }
+        public ItemSede datos { get; set; }
+    }
 }

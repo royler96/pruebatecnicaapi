@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BD_COMPLEJOSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BD_COMPLEJOSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="usuario">
           <Key>
             <PropertyRef Name="id_usuario" />
@@ -23,6 +23,10 @@
           <Parameter Name="id_usuario" Type="varchar" Mode="In" />
           <Parameter Name="nombre_equipo" Type="varchar" Mode="In" />
           <Parameter Name="estado" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="SP_MOD_EQUIPO_DETALLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_usuario" Type="varchar" Mode="In" />
+          <Parameter Name="id_equipo" Type="int" Mode="In" />
         </Function>
         <Function Name="SP_MOD_EQUIPO_ELIMINACION" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id_usuario" Type="varchar" Mode="In" />
@@ -45,6 +49,10 @@
           <Parameter Name="presupuesto" Type="decimal" Mode="In" />
           <Parameter Name="estado" Type="bit" Mode="In" />
         </Function>
+        <Function Name="SP_MOD_SEDE_DETALLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_usuario" Type="varchar" Mode="In" />
+          <Parameter Name="id_sede" Type="int" Mode="In" />
+        </Function>
         <Function Name="SP_MOD_SEDE_ELIMINACION" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id_usuario" Type="varchar" Mode="In" />
           <Parameter Name="id_sede" Type="int" Mode="In" />
@@ -64,8 +72,7 @@
         <EntityContainer Name="BD_COMPLEJOSModelStoreContainer">
           <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BD_COMPLEJOSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -127,6 +134,14 @@
             <Parameter Name="presupuesto" Mode="In" Type="Decimal" />
             <Parameter Name="estado" Mode="In" Type="Boolean" />
           </FunctionImport>
+          <FunctionImport Name="SP_MOD_EQUIPO_DETALLE" ReturnType="Collection(BD_COMPLEJOSModel.SP_MOD_EQUIPO_DETALLE_Result)">
+            <Parameter Name="id_usuario" Mode="In" Type="String" />
+            <Parameter Name="id_equipo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_MOD_SEDE_DETALLE" ReturnType="Collection(BD_COMPLEJOSModel.SP_MOD_SEDE_DETALLE_Result)">
+            <Parameter Name="id_usuario" Mode="In" Type="String" />
+            <Parameter Name="id_sede" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_MOD_EQUIPO_CREACION_Result">
           <Property Type="Int32" Name="codigo_respuesta" Nullable="true" />
@@ -175,6 +190,22 @@
           <Property Type="Int32" Name="codigo_respuesta" Nullable="true" />
           <Property Type="String" Name="mensaje_usuario_respuesta" Nullable="true" MaxLength="1000" />
           <Property Type="String" Name="mensaje_sistema_respuesta" Nullable="true" MaxLength="4000" />
+        </ComplexType>
+        <ComplexType Name="SP_MOD_EQUIPO_DETALLE_Result">
+          <Property Type="Int32" Name="id_equipo" Nullable="false" />
+          <Property Type="String" Name="cod_equipo" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="nombre_equipo" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="estado" Nullable="true" />
+          <Property Type="String" Name="fecha_actualizacion" Nullable="true" MaxLength="4000" />
+        </ComplexType>
+        <ComplexType Name="SP_MOD_SEDE_DETALLE_Result">
+          <Property Type="Int32" Name="id_sede" Nullable="false" />
+          <Property Type="String" Name="cod_sede" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="nombre_sede" Nullable="true" MaxLength="120" />
+          <Property Type="Int32" Name="numero_complejos" Nullable="true" />
+          <Property Type="Decimal" Name="presupuesto" Nullable="true" Precision="16" Scale="2" />
+          <Property Type="Boolean" Name="estado" Nullable="true" />
+          <Property Type="String" Name="fecha_actualizacion" Nullable="true" MaxLength="4000" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -274,6 +305,30 @@
                 <ScalarProperty Name="codigo_respuesta" ColumnName="codigo_respuesta" />
                 <ScalarProperty Name="mensaje_usuario_respuesta" ColumnName="mensaje_usuario_respuesta" />
                 <ScalarProperty Name="mensaje_sistema_respuesta" ColumnName="mensaje_sistema_respuesta" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_MOD_EQUIPO_DETALLE" FunctionName="BD_COMPLEJOSModel.Store.SP_MOD_EQUIPO_DETALLE">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BD_COMPLEJOSModel.SP_MOD_EQUIPO_DETALLE_Result">
+                <ScalarProperty Name="id_equipo" ColumnName="id_equipo" />
+                <ScalarProperty Name="cod_equipo" ColumnName="cod_equipo" />
+                <ScalarProperty Name="nombre_equipo" ColumnName="nombre_equipo" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="fecha_actualizacion" ColumnName="fecha_actualizacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_MOD_SEDE_DETALLE" FunctionName="BD_COMPLEJOSModel.Store.SP_MOD_SEDE_DETALLE">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BD_COMPLEJOSModel.SP_MOD_SEDE_DETALLE_Result">
+                <ScalarProperty Name="id_sede" ColumnName="id_sede" />
+                <ScalarProperty Name="cod_sede" ColumnName="cod_sede" />
+                <ScalarProperty Name="nombre_sede" ColumnName="nombre_sede" />
+                <ScalarProperty Name="numero_complejos" ColumnName="numero_complejos" />
+                <ScalarProperty Name="presupuesto" ColumnName="presupuesto" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="fecha_actualizacion" ColumnName="fecha_actualizacion" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
