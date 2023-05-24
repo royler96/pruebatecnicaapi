@@ -1,6 +1,10 @@
 using System.Web.Http;
 using Unity;
 using Unity.WebApi;
+using WebApi.Business.Contratos;
+using WebApi.Business.Implementaciones;
+using WebApi.DataAccess.Contratos;
+using WebApi.DataAccess.Implementaciones;
 
 namespace WebApi
 {
@@ -13,8 +17,9 @@ namespace WebApi
             // register all your components with the container here
             // it is NOT necessary to register your controllers
             
-            // e.g. container.RegisterType<ITestService, TestService>();
-            
+            container.RegisterType<ISedeBO, SedeBO>();
+            container.RegisterType<ISedeDO, SedeDO>();
+
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
