@@ -91,5 +91,41 @@ namespace WebApi.DataAccess.Implementaciones
                 };
             }
         }
+
+        public DataPostSede putSede(int id_sede, PostSede datos, string id_usuario)
+        {
+            try
+            {
+                var ctx = new BD_COMPLEJOSEntities();
+                var datosBusqueda = ctx.SP_MOD_SEDE_MODIFICACION(id_usuario, id_sede, datos.nombre_sede, datos.numero_complejos, datos.presupuesto, datos.estado)
+                    .FirstOrDefault();
+
+                if (datosBusqueda != null)
+                {
+
+                    return new DataPostSede()
+                    {
+                        codigoRes = (HttpStatusCode)datosBusqueda.codigo_respuesta,
+                        mensajeRes = datosBusqueda.mensaje_usuario_respuesta                        
+                    };
+                }
+                else
+                {
+                    return new DataPostSede()
+                    {
+                        codigoRes = HttpStatusCode.InternalServerError,
+                        mensajeRes = "No se obtuvo respuesta de la transacción."
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new DataPostSede()
+                {
+                    codigoRes = HttpStatusCode.InternalServerError,
+                    mensajeRes = "Error al editar los datos."
+                };
+            }
+        }
     }
 }

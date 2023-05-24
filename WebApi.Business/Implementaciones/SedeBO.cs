@@ -26,5 +26,10 @@ namespace WebApi.Business.Implementaciones
         {
             return _sedeDO.postSede(datos, id_usuario);
         }
+
+        public DataPostSede putSede(int id_sede, PostSede datos, string id_usuario)
+        {
+            return _sedeDO.putSede(id_sede, datos, id_usuario);
+        }
     }
 }

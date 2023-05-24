@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
 using System.Web.Http;
 using WebApi.Business.Contratos;
 using WebApi.Entities.Sede;
@@ -22,18 +17,18 @@ namespace WebApi.Controllers
             _sedeBO = sedeBO;
         }
 
-        [HttpGet]        
+        [HttpGet]
         [Authorize]
         public HttpResponseMessage Get(string nombre_sede)
         {
-            
+
             try
             {
                 var id_usuario = User.Identity.GetUserId();
                 var respuesta = _sedeBO.getAllSedes(nombre_sede, id_usuario);
                 if (respuesta != null)
                 {
-                    
+
                     if (respuesta.codigoRes == HttpStatusCode.OK)
                     {
                         return Request.CreateResponse(HttpStatusCode.OK,
@@ -47,13 +42,13 @@ namespace WebApi.Controllers
                         new { Message = respuesta.mensajeRes });
                 }
                 else
-                {                    
+                {
                     return Request.CreateResponse(HttpStatusCode.InternalServerError,
                         new { Message = "Error interno al obtener respuesta." });
                 }
             }
             catch (Exception)
-            {                
+            {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError,
                         new { Message = "Error interno en el servicio de listar sedes." });
             }
@@ -93,6 +88,42 @@ namespace WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError,
                         new { Message = "Error interno en el servicio de registro." });
+            }
+        }
+        [HttpPut]
+        [Authorize]
+        public HttpResponseMessage Put(int id, PostSede datos)
+        {
+
+            try
+            {
+                var id_usuario = User.Identity.GetUserId();
+                var respuesta = _sedeBO.putSede(id, datos, id_usuario);
+                if (respuesta != null)
+                {
+
+                    if (respuesta.codigoRes == HttpStatusCode.OK)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK,
+                            new { Message = respuesta.mensajeRes });
+                    }
+                    else if (respuesta.codigoRes == HttpStatusCode.NoContent)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NoContent);
+                    }
+                    return Request.CreateResponse(respuesta.codigoRes,
+                        new { Message = respuesta.mensajeRes });
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                        new { Message = "Error interno al obtener respuesta." });
+                }
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                        new { Message = "Error interno en el servicio de modificación." });
             }
         }
     }
