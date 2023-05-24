@@ -5,5 +5,6 @@ namespace WebApi.Business.Contratos
     public interface ISedeBO
     {
         DataItemSede getAllSedes(string nombre_sede, string id_usuario);
+        DataPostSede postSede(PostSede datos, string id_usuario);
     }
 }

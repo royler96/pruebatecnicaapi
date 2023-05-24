@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Web.Http;
 using WebApi.Business.Contratos;
+using WebApi.Entities.Sede;
 
 namespace WebApi.Controllers
 {
@@ -55,6 +56,43 @@ namespace WebApi.Controllers
             {                
                 return Request.CreateResponse(HttpStatusCode.InternalServerError,
                         new { Message = "Error interno en el servicio de listar sedes." });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public HttpResponseMessage Post(PostSede datos)
+        {
+
+            try
+            {
+                var id_usuario = User.Identity.GetUserId();
+                var respuesta = _sedeBO.postSede(datos, id_usuario);
+                if (respuesta != null)
+                {
+
+                    if (respuesta.codigoRes == HttpStatusCode.Created)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Created,
+                            new { Message = respuesta.mensajeRes, respuesta.id_sede });
+                    }
+                    else if (respuesta.codigoRes == HttpStatusCode.NoContent)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NoContent);
+                    }
+                    return Request.CreateResponse(respuesta.codigoRes,
+                        new { Message = respuesta.mensajeRes });
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                        new { Message = "Error interno al obtener respuesta." });
+                }
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                        new { Message = "Error interno en el servicio de registro." });
             }
         }
     }

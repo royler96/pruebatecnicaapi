@@ -55,5 +55,41 @@ namespace WebApi.DataAccess.Implementaciones
                 };
             }
         }
+        public DataPostSede postSede(PostSede datos, string id_usuario)
+        {
+            try
+            {
+                var ctx = new BD_COMPLEJOSEntities();
+                var datosBusqueda = ctx.SP_MOD_SEDE_CREACION(id_usuario, datos.nombre_sede, datos.numero_complejos, datos.presupuesto, datos.estado)
+                    .FirstOrDefault();
+
+                if (datosBusqueda != null)
+                {                   
+
+                    return new DataPostSede()
+                    {
+                        codigoRes = (HttpStatusCode)datosBusqueda.codigo_respuesta,
+                        mensajeRes = datosBusqueda.mensaje_usuario_respuesta,
+                        id_sede = datosBusqueda.id_sede.GetValueOrDefault()
+                    };
+                }
+                else
+                {
+                    return new DataPostSede()
+                    {
+                        codigoRes = HttpStatusCode.InternalServerError,
+                        mensajeRes = "No se obtuvo respuesta de la transacción."                        
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new DataPostSede()
+                {
+                    codigoRes = HttpStatusCode.InternalServerError,
+                    mensajeRes = "Error al registrar los datos."                    
+                };
+            }
+        }
     }
 }
