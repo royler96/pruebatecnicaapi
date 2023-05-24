@@ -130,6 +130,7 @@ namespace WebApi.Controllers
 
         [HttpDelete]
         [Authorize]
+        [Route("eliminacion/{id}")]
         public HttpResponseMessage Delete(int id)
         {
 
